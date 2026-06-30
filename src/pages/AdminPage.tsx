@@ -12,6 +12,7 @@ function AdminPage() {
   const [input, setInput] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginError, setLoginError] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD;
 
   const handlePasswordChange = (value: string) => {
@@ -20,10 +21,6 @@ function AdminPage() {
   };
 
   const handleLogin = () => {
-    console.log('Input:', input);
-    console.log('Correct password:', correctPassword);
-    console.log('Match:', input === correctPassword);
-    
     if (input === correctPassword) {
       setIsAuthenticated(true);
       setLoginError(false);
@@ -103,41 +100,56 @@ function AdminPage() {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
 
-    // Get Cloudinary config from environment variables
+    setIsUploading(true);
     const cloudName = import.meta.env.VITE_CLOUD_NAME;
-    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET; // Create this in Cloudinary
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+    if (!cloudName || !uploadPreset) {
+      console.error('Cloudinary configuration missing');
+      setIsUploading(false);
+      return;
+    }
+
+    const uploadedUrls: string[] = [];
 
     for (const file of Array.from(files)) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', uploadPreset);
+      const data = new FormData();
+      data.append('file', file);
+      data.append('upload_preset', uploadPreset);
 
       try {
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
           {
             method: 'POST',
-            body: formData,
+            body: data,
           }
         );
 
-        const data = await response.json();
+        const result = await response.json();
         
-        if (data.secure_url) {
-          setFormData(prev => ({
-            ...prev,
-            images: [...prev.images, data.secure_url]
-          }));
+        if (result.secure_url) {
+          uploadedUrls.push(result.secure_url);
         } else {
-          console.error('Upload failed:', data);
-          // Show error to user
+          console.error('Upload failed for file:', file.name, result);
         }
       } catch (error) {
         console.error('Upload error:', error);
       }
     }
+
+    if (uploadedUrls.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, ...uploadedUrls]
+      }));
+    }
+
+    setIsUploading(false);
+    // Clear input
+    e.target.value = '';
   };
 
   const handleRemoveImage = (index: number) => {
@@ -160,38 +172,28 @@ function AdminPage() {
     const techStackArray = formData.techStack.split(',').map(t => t.trim()).filter(t => t);
     const featuresArray = formData.features.split('\n').map(f => f.trim()).filter(f => f);
 
+    const projectData = {
+      title: formData.title,
+      tagline: formData.tagline,
+      description: formData.description,
+      techStack: techStackArray,
+      features: featuresArray,
+      role: formData.role,
+      timeline: formData.timeline,
+      images: formData.images,
+      liveUrl: formData.liveUrl,
+      githubUrl: formData.githubUrl
+    };
+
     if (isAddingNew) {
-      addProject({
-        title: formData.title,
-        tagline: formData.tagline,
-        description: formData.description,
-        techStack: techStackArray,
-        features: featuresArray,
-        role: formData.role,
-        timeline: formData.timeline,
-        images: formData.images,
-        liveUrl: formData.liveUrl,
-        githubUrl: formData.githubUrl
-      });
-      setProjects(getProjects());
-      setIsAddingNew(false);
-      setEditingProject(null);
+      addProject(projectData);
     } else if (editingProject) {
-      updateProject(editingProject.id, {
-        title: formData.title,
-        tagline: formData.tagline,
-        description: formData.description,
-        techStack: techStackArray,
-        features: featuresArray,
-        role: formData.role,
-        timeline: formData.timeline,
-        images: formData.images,
-        liveUrl: formData.liveUrl,
-        githubUrl: formData.githubUrl
-      });
-      setProjects(getProjects());
-      setEditingProject(null);
+      updateProject(editingProject.id, projectData);
     }
+
+    setProjects(getProjects());
+    setIsAddingNew(false);
+    setEditingProject(null);
   };
 
   const handleDelete = (id: number) => {
@@ -257,7 +259,6 @@ function AdminPage() {
       {/* STICKY GLASSMORPHIC HEADER */}
       <header className="sticky top-0 z-40 w-full glass shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group">
             <span className="font-outfit text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-primary-dark to-primary-light dark:from-primary dark:to-primary-light bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
               Kaleab.dev
@@ -265,9 +266,7 @@ function AdminPage() {
             <span className="h-2 w-2 rounded-full bg-primary animate-pulse shadow-sm" />
           </Link>
 
-          {/* Actions */}
           <div className="flex items-center gap-4">
-            {/* Theme Toggle Button */}
             <button
               onClick={() => setIsDark(!isDark)}
               className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl glass border border-stone-200 dark:border-stone-850 flex items-center justify-center text-stone-700 dark:text-stone-300 hover:text-primary dark:hover:text-primary-light transition-all duration-300 hover:scale-105 active:scale-95 outline-none cursor-pointer"
@@ -284,8 +283,7 @@ function AdminPage() {
               )}
             </button>
 
-            {/* Home Link */}
-            <Link 
+            <Link
               to="/"
               className="hidden sm:inline-flex items-center gap-1.5 bg-primary dark:bg-primary-700 text-white font-semibold font-outfit text-sm px-4 py-2.5 rounded-xl hover:bg-primary-dark dark:hover:bg-primary-650 hover:scale-105 transition-all active:scale-95 shadow-sm"
             >
@@ -530,18 +528,30 @@ function AdminPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-stone-700 dark:text-stone-350 uppercase tracking-wide">
-                        Project Images
-                      </label>
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-bold text-stone-700 dark:text-stone-350 uppercase tracking-wide">
+                          Project Images
+                        </label>
+                        {isUploading && (
+                          <span className="text-xs font-semibold text-primary animate-pulse flex items-center gap-1">
+                            <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                            Uploading...
+                          </span>
+                        )}
+                      </div>
                       <input
                         type="file"
                         accept="image/*"
                         multiple
                         onChange={handleImageUpload}
-                        className="w-full bg-white dark:bg-stone-950 border border-stone-250 dark:border-stone-850 px-4 py-2.5 rounded-xl text-sm focus:border-primary dark:focus:border-primary-light focus:ring-1 focus:ring-primary dark:focus:ring-primary-light outline-none transition-all"
+                        disabled={isUploading}
+                        className="w-full bg-white dark:bg-stone-950 border border-stone-250 dark:border-stone-850 px-4 py-2.5 rounded-xl text-sm focus:border-primary dark:focus:border-primary-light focus:ring-1 focus:ring-primary dark:focus:ring-primary-light outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                       <p className="text-stone-500 dark:text-stone-400 text-xs mt-1">
-                        Upload multiple images. They will be converted to base64 and stored.
+                        Upload images to Cloudinary. They will be automatically hosted and optimized.
                       </p>
                     </div>
 
@@ -638,7 +648,8 @@ function AdminPage() {
                   <div className="flex items-center gap-3 mt-6 pt-6 border-t border-stone-200 dark:border-stone-850">
                     <button
                       onClick={handleSave}
-                      className="flex-1 bg-primary dark:bg-primary-700 text-white font-semibold font-outfit text-sm px-6 py-3 rounded-xl shadow-md hover:bg-primary-dark dark:hover:bg-primary-650 hover:scale-105 transition-all active:scale-95"
+                      disabled={isUploading}
+                      className="flex-1 bg-primary dark:bg-primary-700 text-white font-semibold font-outfit text-sm px-6 py-3 rounded-xl shadow-md hover:bg-primary-dark dark:hover:bg-primary-650 hover:scale-105 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isAddingNew ? 'Add Project' : 'Save Changes'}
                     </button>
