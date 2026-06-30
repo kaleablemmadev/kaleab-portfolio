@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getProjects, addProject, updateProject, deleteProject, reorderProjects, type Project } from '../utils/projectData';
+import { Cloudinary } from '@cloudinary/url-gen';
 
 function AdminPage() {
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -101,21 +102,43 @@ function AdminPage() {
     setIsAddingNew(true);
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target?.result as string;
-        setFormData(prev => ({
-          ...prev,
-          images: [...prev.images, base64]
-        }));
-      };
-      reader.readAsDataURL(file);
-    });
+    // Get Cloudinary config from environment variables
+    const cloudName = import.meta.env.VITE_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET; // Create this in Cloudinary
+
+    for (const file of Array.from(files)) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+
+      try {
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+
+        const data = await response.json();
+        
+        if (data.secure_url) {
+          setFormData(prev => ({
+            ...prev,
+            images: [...prev.images, data.secure_url]
+          }));
+        } else {
+          console.error('Upload failed:', data);
+          // Show error to user
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+      }
+    }
   };
 
   const handleRemoveImage = (index: number) => {
