@@ -3,16 +3,58 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kaleab Lemma | Full-Stack Software Engineer Portfolio</title>
-    <meta name="description" content="Welcome to the portfolio of Kaleab Lemma, a Full-Stack Software Engineer and UI/UX designer. Explore interactive projects, tools, and technical expertise." />
+    <meta name="theme-color" content="#C2410C" />
+
+    <!-- Primary Meta Tags -->
+    <title>Kaleab Lemma | Full-Stack Software Engineer & UI/UX Designer</title>
+    <meta name="title" content="Kaleab Lemma | Full-Stack Software Engineer & UI/UX Designer" />
+    <meta name="description" content="Professional portfolio of Kaleab Lemma, a Full-Stack Software Engineer specializing in React, TypeScript, and Flutter. Explore high-performance web and mobile applications." />
+    <meta name="keywords" content="Kaleab Lemma, Software Engineer, Full-Stack Developer, React Developer, TypeScript, Flutter, UI/UX Design, Portfolio, Web Development, Mobile Development" />
+    <meta name="author" content="Kaleab Lemma" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://kaleab.dev/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kaleab.dev/" />
+    <meta property="og:title" content="Kaleab Lemma | Full-Stack Software Engineer & UI/UX Designer" />
+    <meta property="og:description" content="Professional portfolio of Kaleab Lemma, a Full-Stack Software Engineer specializing in React, TypeScript, and Flutter." />
+    <meta property="og:image" content="https://kaleab.dev/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://kaleab.dev/" />
+    <meta property="twitter:title" content="Kaleab Lemma | Full-Stack Software Engineer & UI/UX Designer" />
+    <meta property="twitter:description" content="Professional portfolio of Kaleab Lemma, a Full-Stack Software Engineer specializing in React, TypeScript, and Flutter." />
+    <meta property="twitter:image" content="https://kaleab.dev/og-image.jpg" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Kaleab Lemma",
+        "url": "https://kaleab.dev/",
+        "jobTitle": "Full-Stack Software Engineer",
+        "sameAs": [
+          "https://github.com/kaleablemmadev",
+          "https://linkedin.com/in/kaleab-lemma-49b523416/",
+          "https://x.com/kaleablemmadev"
+        ],
+        "description": "Full-Stack Software Engineer specializing in React, TypeScript, and Flutter development."
+      }
+    </script>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      // Configure Tailwind CDN to match our themes variables in case we need custom utilities in the CDN layer
+      // Configure Tailwind CDN
       tailwind.config = {
         darkMode: 'class',
         theme: {
@@ -23,28 +65,12 @@
             },
             colors: {
               stone: {
-                50: '#FAFAF9',
-                100: '#F5F5F4',
-                200: '#E7E5E4',
-                300: '#D6D3D1',
-                400: '#A8A29E',
-                500: '#78716C',
-                600: '#57534E',
-                700: '#44403C',
-                800: '#292524',
-                900: '#1C1917',
-                950: '#0C0A09',
+                50: '#FAFAF9', 100: '#F5F5F4', 200: '#E7E5E4', 300: '#D6D3D1', 400: '#A8A29E',
+                500: '#78716C', 600: '#57534E', 700: '#44403C', 800: '#292524', 900: '#1C1917', 950: '#0C0A09',
               },
               primary: {
-                DEFAULT: '#C2410C',
-                light: '#FB923C',
-                dark: '#9A3412',
-                50: '#FFF2E6',
-                100: '#FFEDD5',
-                500: '#F97316',
-                600: '#EA580C',
-                700: '#C2410C',
-                800: '#9A3412',
+                DEFAULT: '#C2410C', light: '#FB923C', dark: '#9A3412',
+                50: '#FFF2E6', 100: '#FFEDD5', 500: '#F97316', 600: '#EA580C', 700: '#C2410C', 800: '#9A3412',
               }
             },
             animation: {
@@ -63,27 +89,18 @@
                 '0%, 100%': { opacity: '1', transform: 'scale(1)' },
                 '50%': { opacity: '0.85', transform: 'scale(0.98)' }
               },
-              fadeIn: {
-                from: { opacity: '0' },
-                to: { opacity: '1' }
-              },
-              slideUp: {
-                from: { opacity: '0', transform: 'translateY(24px)' },
-                to: { opacity: '1', transform: 'translateY(0)' }
-              }
+              fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
+              slideUp: { from: { opacity: '0', transform: 'translateY(24px)' }, to: { opacity: '1', transform: 'translateY(0)' } }
             }
           }
         }
       }
     </script>
     <style>
-      /* Ensure default font styling */
-      body {
-        font-family: 'Inter', sans-serif;
-      }
-      .font-outfit {
-        font-family: 'Outfit', sans-serif;
-      }
+      body { font-family: 'Inter', sans-serif; }
+      .font-outfit { font-family: 'Outfit', sans-serif; }
+      .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
+      .dark .glass { background: rgba(12, 10, 9, 0.7); backdrop-filter: blur(10px); }
     </style>
   </head>
   <body>
