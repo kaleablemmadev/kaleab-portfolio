@@ -203,7 +203,7 @@ function HomePage() {
           </span>
         </h1>
               <p className="mt-6 text-stone-600 dark:text-stone-400 text-base sm:text-xl max-w-2xl leading-relaxed">
-          Hi, I'm <strong className="text-stone-850 dark:text-white font-bold font-outfit">Kaleab Lemma Gebre</strong>. A frontend developer and technical writer who ships fast, documents everything, and learns in public. Four projects built in 14 days. Two articles published with 9.8/10 ratings. Currently expanding into backend development. I don't claim expertise I haven't earned — but I will earn it in public.
+          Hi, I'm <strong className="text-stone-850 dark:text-white font-bold font-outfit">Kaleab Lemma Gebre</strong>. A frontend developer and technical writer who ships fast, documents everything, and learns in public. Four projects built in 14 days. Two articles published explaining technical concepts to beginners. Currently expanding into backend development. I don't claim expertise I haven't earned — but I will earn it in public.
         </p>
 
         {/* CTA Actions */}
