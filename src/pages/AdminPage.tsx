@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getProjects, addProject, updateProject, deleteProject, reorderProjects, type Project } from '../utils/projectData';
-import { Cloudinary } from '@cloudinary/url-gen';
 
 function AdminPage() {
   const [isDark, setIsDark] = useState<boolean>(() => {
