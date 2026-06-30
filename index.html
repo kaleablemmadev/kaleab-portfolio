@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kaleab Lemma | Full-Stack Software Engineer Portfolio</title>
+    <meta name="description" content="Welcome to the portfolio of Kaleab Lemma, a Full-Stack Software Engineer and UI/UX designer. Explore interactive projects, tools, and technical expertise." />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Configure Tailwind CDN to match our themes variables in case we need custom utilities in the CDN layer
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              outfit: ['Outfit', 'sans-serif'],
+            },
+            colors: {
+              stone: {
+                50: '#FAFAF9',
+                100: '#F5F5F4',
+                200: '#E7E5E4',
+                300: '#D6D3D1',
+                400: '#A8A29E',
+                500: '#78716C',
+                600: '#57534E',
+                700: '#44403C',
+                800: '#292524',
+                900: '#1C1917',
+                950: '#0C0A09',
+              },
+              primary: {
+                DEFAULT: '#C2410C',
+                light: '#FB923C',
+                dark: '#9A3412',
+                50: '#FFF2E6',
+                100: '#FFEDD5',
+                500: '#F97316',
+                600: '#EA580C',
+                700: '#C2410C',
+                800: '#9A3412',
+              }
+            },
+            animation: {
+              'drift': 'drift 20s ease-in-out infinite alternate',
+              'pulse-subtle': 'pulseSubtle 2.5s ease-in-out infinite',
+              'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            },
+            keyframes: {
+              drift: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '50%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '100%': { transform: 'translate(-20px, 20px) scale(0.95)' }
+              },
+              pulseSubtle: {
+                '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+                '50%': { opacity: '0.85', transform: 'scale(0.98)' }
+              },
+              fadeIn: {
+                from: { opacity: '0' },
+                to: { opacity: '1' }
+              },
+              slideUp: {
+                from: { opacity: '0', transform: 'translateY(24px)' },
+                to: { opacity: '1', transform: 'translateY(0)' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Ensure default font styling */
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .font-outfit {
+        font-family: 'Outfit', sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
